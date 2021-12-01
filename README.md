@@ -1,4 +1,4 @@
-# Wordpress, MySQL, phpMyAdmin, Traefik (TLS, HTTPS)
+# Wordpress, MySQL, phpMyAdmin, Traefik (TLS, HTTPS), Docker
 
 ## Tested
 - 2021-12-01
