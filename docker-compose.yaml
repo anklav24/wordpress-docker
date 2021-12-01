@@ -5,7 +5,7 @@ services:
     image: zabbix/zabbix-agent:ubuntu-5.0.16
 
     cpu_quota: 5000  # 1000 = 1%
-    mem_reservation: 8M
+    mem_reservation: 16M
 
     ports:
       - "10050:10050"
@@ -24,57 +24,58 @@ services:
     stop_grace_period: 5s
     restart: always
 
-#  traefik:
-#    image: traefik:v2.5.3
-#
-#    cpu_quota: 10000  # 1000 = 1%
-#    mem_reservation: 64M
-#
-#    ports:
-#      - "80:80"
-#      - "443:443"
-#    volumes:
-#      - traefik-ssl-certs:/ssl-certs
-#      - ./deploy_configs/traefik/:/etc/traefik/
-#      - /etc/localtime:/etc/localtime:ro
-#      - /var/run/docker.sock:/var/run/docker.sock:ro
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.dashboard.rule=Host(`traefik.zabbix-web24.duckdns.org`)"
-#      - "traefik.http.services.dashboard.loadbalancer.server.port=8080"
-#
-#      - "traefik.http.routers.dashboard.tls=true"
-#      - "traefik.http.routers.dashboard.entrypoints=http,https"
-#      - "traefik.http.routers.dashboard.middlewares=secheaders@file"
-#      - "traefik.http.routers.dashboard.tls.certresolver=staging"
-#
-#      # Basic Authentication for Traefik Dashboard
-#      # Generate password: sudo apt update && sudo apt install apache2-utils && htpasswd -nb USER PASSWORD
-#      # You need to escape all $ sings ($ --> $$)
-#      - "traefik.http.routers.dashboard.service=api@internal"
-#      - "traefik.http.routers.dashboard.middlewares=traefik-auth"
-#      - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$dQS.9m8b$$99bHXnFsbxXaa5StcfPRk/"
-#    healthcheck:
-#      test: [ "CMD", "wget", "http://localhost:8082/ping","--spider" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 3
-#      start_period: 5s
-#    security_opt:
-#      - no-new-privileges:true
-#    networks:
-#      wordpress_net:
-#    restart: always
+  traefik:
+    image: traefik:v2.5.3
+
+    cpu_quota: 10000  # 1000 = 1%
+    mem_reservation: 128M
+
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - traefik-ssl-certs:/ssl-certs
+      - ./deploy_configs/traefik/:/etc/traefik/
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.wordpress24.duckdns.org`)"
+      - "traefik.http.services.dashboard.loadbalancer.server.port=8080"
+
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.entrypoints=http,https"
+      - "traefik.http.routers.dashboard.middlewares=secheaders@file"
+      - "traefik.http.routers.dashboard.tls.certresolver=staging"
+
+      # Basic Authentication for Traefik Dashboard
+      # Generate password: sudo apt update && sudo apt install apache2-utils && htpasswd -nb USER PASSWORD
+      # You need to escape all $ sings ($ --> $$)
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=traefik-auth"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=Oracle:$$apr1$$l5wr.jVu$$A/jaVwgCmnakAtZcp58IB1"
+    healthcheck:
+      test: [ "CMD", "wget", "http://localhost:8082/ping","--spider" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      wordpress_net:
+      traefik_net:
+    restart: always
 
   wordpress:
-    image: wordpress
-#    image: wordpress:php8.0-fpm-alpine
+    image: wordpress:php8.0
+
+    cpu_quota: 10000  # 1000 = 1%
+    mem_reservation: 256M
+
     restart: always
     depends_on:
       - mysql_db
-    ports:
-      - "80:80"
-#      - "8080:80"
     environment:
       WORDPRESS_DB_HOST: mysql_db
       WORDPRESS_DB_USER: exampleuser
@@ -84,13 +85,20 @@ services:
       - ./wordpress:/var/www/html
     networks:
       wordpress_net:
-#    labels:
-#      - traefik.enable=true
-#      - traefik.http.routers.wordpress.rule=Host(`wordpressdemo.net`)
+    labels:
+      - traefik.http.routers.wordpress.rule=Host(`wordpress24.duckdns.org`)
+      - traefik.enable=true
+      - traefik.http.routers.wordpress.entrypoints=http,https
+      - traefik.http.routers.wordpress.tls=true
+      - traefik.http.routers.wordpress.tls.certresolver=staging
+      - traefik.http.services.wordpress.loadbalancer.server.port=80
 
   mysql_db:
-#    platform: linux/arm64
     image: mysql/mysql-server:8.0
+
+    cpu_quota: 10000  # 1000 = 1%
+    mem_reservation: 512M
+
     restart: always
     environment:
       MYSQL_DATABASE: exampledb
@@ -103,6 +111,15 @@ services:
       wordpress_net:
 
 networks:
+  traefik_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.209.0/24
+
   wordpress_net:
     driver: bridge
     driver_opts:
