@@ -1,11 +1,11 @@
-# Zabbix, PostgreSQL, Grafana, Traefik (TLS, HTTPS)
+# Wordpress, MySQL, phpMyAdmin, Traefik (TLS, HTTPS)
 
 ## Tested
-- 2021-10-29
+- 2021-12-01
 
 ## Requirements
-- Oracle VPS Free Tier (VM.Standard.E2.1.Micro)
-- Ubuntu 20.04
+- Oracle VPS Free Tier ARM (VM.Standard.A1.Flex)
+- Ubuntu 20.04 ARM
 
 ## Version
 - Zabbix 5.0.16
