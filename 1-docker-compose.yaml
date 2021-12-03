@@ -50,9 +50,11 @@ services:
       - traefik.http.routers.dashboard.entrypoints=http,https
       - traefik.http.routers.dashboard.middlewares=secheaders@file
 
+      - traefik.http.middlewares.traefik-ipwhitelist.ipwhitelist.sourcerange=${IPWHITELIST}
+
       # Basic Authentication for Traefik Dashboard
       - traefik.http.routers.dashboard.service=api@internal
-      - traefik.http.routers.dashboard.middlewares=traefik-auth
+      - traefik.http.routers.dashboard.middlewares=traefik-auth,traefik-ipwhitelist
       - traefik.http.middlewares.traefik-auth.basicauth.users=${LOGIN}:${PASS_PART_1}${PASS_PART_2}
     healthcheck:
       test: [ "CMD", "wget", "http://localhost:8082/ping","--spider" ]
@@ -80,6 +82,9 @@ services:
       - traefik.http.routers.portainer.rule=Host(`portainer.oracle24.duckdns.org`)
       - traefik.http.routers.portainer.tls.certresolver=${CASERVER}
       - traefik.http.services.portainer.loadbalancer.server.port=9000
+
+      - traefik.http.middlewares.portainer-ipwhitelist.ipwhitelist.sourcerange=${IPWHITELIST}
+      - traefik.http.routers.portainer.middlewares=portainer-ipwhitelist
 
       - traefik.enable=true
       - traefik.http.routers.portainer.entrypoints=http,https

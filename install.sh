@@ -50,8 +50,10 @@ sudo apt -y install docker-ctop
 sudo mkdir -p ~/zabbix-docker/zbx_env/usr/share/zabbix/modules
 cd ~/zabbix-docker
 
-#docker-compose up -d
-#docker-compose -f zabbix-server-docker-compose.yaml up -d
-#docker-compose -f zabbix-web-docker-compose.yaml up -d
+docker-compose -f 1-docker-compose.yaml up -d
+docker-compose -f 2-docker-compose.yaml up -d
+
+echo "Wait 5 minutes before reboot..."
+sleep 360
 
 sudo reboot now  # Перезагружаем и смотрим что все стартовало
