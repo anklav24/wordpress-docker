@@ -87,6 +87,28 @@ services:
     networks:
       traefik_proxy_net:
 
+# PG admin
+
+  phpmyadmin:
+    image: phpmyadmin:5.1.1
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_ARBITRARY: 1
+    labels:
+      - traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.oracle24.duckdns.org`)
+      - traefik.http.routers.phpmyadmin.tls.certresolver=${CASERVER}
+      - traefik.http.services.phpmyadmin.loadbalancer.server.port=80
+
+      - traefik.http.middlewares.phpmyadmin-ipwhitelist.ipwhitelist.sourcerange=${IPWHITELIST}
+      - traefik.http.routers.phpmyadmin.middlewares=phpmyadmin-ipwhitelist
+
+      - traefik.enable=true
+      - traefik.http.routers.phpmyadmin.entrypoints=http,https
+      - traefik.http.routers.phpmyadmin.tls=true
+    networks:
+      traefik_proxy_net:
+
 networks:
   traefik_proxy_net:
     name: traefik_proxy_net
