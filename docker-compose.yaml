@@ -17,12 +17,10 @@ services:
       - ./zbx_env/var/lib/zabbix/enc:/var/lib/zabbix/enc:ro
       - ./zbx_env/var/lib/zabbix/ssh_keys:/var/lib/zabbix/ssh_keys:ro
     env_file:
-      - ./deploy_configs/env_vars/.env_agent
+      - ./deploy_configs/env_vars/zabbix_agent.env
     privileged: true
     pid: "host"
     stop_grace_period: 5s
-    networks:
-      wordpress_net:
 
   traefik:
     image: traefik:v2.5.3
@@ -64,8 +62,7 @@ services:
     security_opt:
       - no-new-privileges:true
     networks:
-      traefik_net:
-      wordpress_net:
+      traefik_proxy_net:
 
   portainer: # optional more functional and creative UI for docker
     image: portainer/portainer-ce:2.9.1-alpine
@@ -86,8 +83,7 @@ services:
       - traefik.http.routers.portainer.entrypoints=http,https
       - traefik.http.routers.portainer.tls=true
     networks:
-      traefik_net:
-      wordpress_net:
+      traefik_proxy_net:
 
   4soulsband_wordpress:
     image: wordpress:php8.0
@@ -97,24 +93,21 @@ services:
     restart: always
 
     depends_on:
-      - mysql_db
-    environment:
-      WORDPRESS_DB_HOST: 4soulsband_mysql_db
-      WORDPRESS_DB_USER: exampleuser
-      WORDPRESS_DB_PASSWORD: examplepass
-      WORDPRESS_DB_NAME: 4soulsband
+      - 4soulsband_mysql_db
+    env_file: ./deploy_configs/env_vars/4soulsband_wordpress.env
     volumes:
-      - ./wordpress:/var/www/html
+      - ./4soulsband_wordpress:/var/www/html
     labels:
-      - traefik.http.routers.wordpress.rule=Host(`4soulsband.duckdns.org`)
-      - traefik.http.routers.wordpress.tls.certresolver=staging
-      - traefik.http.services.wordpress.loadbalancer.server.port=80
+      - traefik.http.routers.4soulsband_wordpress.rule=Host(`4soulsband.duckdns.org`)
+      - traefik.http.routers.4soulsband_wordpress.tls.certresolver=staging
+      - traefik.http.services.4soulsband_wordpress.loadbalancer.server.port=80
 
       - traefik.enable=true
-      - traefik.http.routers.wordpress.entrypoints=http,https
-      - traefik.http.routers.wordpress.tls=true
+      - traefik.http.routers.4soulsband_wordpress.entrypoints=http,https
+      - traefik.http.routers.4soulsband_wordpress.tls=true
     networks:
-      wordpress_net:
+      4soulsband_net:
+      traefik_proxy_net:
 
   4soulsband_mysql_db:
     image: mysql/mysql-server:8.0
@@ -126,27 +119,23 @@ services:
     ports:
       - "3316:3306"
     command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_DATABASE: 4soulsband
-      MYSQL_USER: exampleuser
-      MYSQL_PASSWORD: examplepass
-      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    env_file: ./deploy_configs/env_vars/4soulsband_wordpress.env
     volumes:
       - ./4soulsband_mysql_db:/var/lib/mysql
     networks:
-      wordpress_net:
+      4soulsband_net:
 
 networks:
-  traefik_net:
+  traefik_proxy_net:
     driver: bridge
     driver_opts:
       com.docker.network.enable_ipv6: "false"
     ipam:
       driver: default
       config:
-        - subnet: 172.16.209.0/24
+        - subnet: 172.16.250.0/24
 
-  wordpress_net:
+  4soulsband_net:
     driver: bridge
     driver_opts:
       com.docker.network.enable_ipv6: "false"
