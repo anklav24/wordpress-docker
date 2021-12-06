@@ -43,7 +43,7 @@ services:
       - ./4soulsband_mysql_db:/var/lib/mysql
     networks:
       4soulsband_net:
-      traefik_proxy_net:
+      traefik_proxy_net:  # To get access to a db by domain name.
 
 networks:
   4soulsband_net:
@@ -53,7 +53,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.16.191.0/24
+        - subnet: 172.16.192.0/24
 
   traefik_proxy_net:
     external: true
