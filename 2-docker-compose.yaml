@@ -24,8 +24,9 @@ services:
       - traefik.http.routers.4soulsband_wordpress.entrypoints=http,https
       - traefik.http.routers.4soulsband_wordpress.tls=true
     networks:
-      4soulsband_net:
       traefik_proxy_net:
+      4soulsband_net:
+#      redis_net:
 
   4soulsband_mysql_db:
     container_name: 4soulsband_mysql_db
@@ -44,6 +45,7 @@ services:
     networks:
       4soulsband_net:
       traefik_proxy_net:  # To get access to a db by domain name.
+#      redis_net:
 
 networks:
   4soulsband_net:
@@ -53,9 +55,12 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.16.192.0/24
+        - subnet: 172.16.193.0/24
 
   traefik_proxy_net:
+    external: true
+
+  redis_net:
     external: true
 
 volumes: # Persistent data
