@@ -116,12 +116,7 @@ Traefik
 - https://www.zabbix.com/documentation/5.0/manual/config/items/itemtypes/zabbix_agent/win_keys
 
 ### Troubleshooting:
-If a wordpress site has the "gateway timeout" error
-and the apache server has an error like this, try it:
+If a wordpress site has the "gateway timeout" error, try add this to container labels:
+```yaml
+- traefik.docker.network=traefik_proxy_net
 ```
-AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.16.192.4. Set the 'ServerName' directive globally to suppress this message
-```
-
-- https://www.digitalocean.com/community/tutorials/apache-configuration-error-ah00558-could-not-reliably-determine-the-server-s-fully-qualified-domain-name
-- check your ```cat /etc/hosts```
-- or ```echo "ServerName localhost" >> /etc/apache2/apache2.conf```

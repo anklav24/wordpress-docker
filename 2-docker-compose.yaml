@@ -19,6 +19,7 @@ services:
       - traefik.http.routers.4soulsband_wordpress.rule=Host(`4soulsband.duckdns.org`)
       - traefik.http.routers.4soulsband_wordpress.tls.certresolver=${CASERVER}
       - traefik.http.services.4soulsband_wordpress.loadbalancer.server.port=80
+      - traefik.docker.network=traefik_proxy_net
 
       - traefik.enable=true
       - traefik.http.routers.4soulsband_wordpress.entrypoints=http,https
@@ -26,7 +27,7 @@ services:
     networks:
       traefik_proxy_net:
       4soulsband_net:
-#      redis_net:
+      redis_net:
 
   4soulsband_mysql_db:
     container_name: 4soulsband_mysql_db
@@ -45,7 +46,7 @@ services:
     networks:
       4soulsband_net:
       traefik_proxy_net:  # To get access to a db by domain name.
-#      redis_net:
+      redis_net:
 
 networks:
   4soulsband_net:
