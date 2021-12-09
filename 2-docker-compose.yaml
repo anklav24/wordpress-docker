@@ -68,24 +68,6 @@ services:
     networks:
       4soulsband_net:
 
-  4soulsband_backup:
-    container_name: 4soulsband_backup
-    image: blacklabelops/volumerize:1.7.1
-    volumes:
-      - ./4soulsband_mysql_db:/source/db:ro
-      - ./4soulsband_wordpress:/source/wp:ro
-      - ./4soulsband_backup:/backup
-    restart: always
-#    command: restore --dry-run  # For testing
-    environment:
-      VOLUMERIZE_SOURCE: /source
-      VOLUMERIZE_TARGET: file:///backup
-      TZ: Asia/Novosibirsk
-      VOLUMERIZE_JOBBER_TIME: 0 0 6 1 * *
-      VOLUMERIZE_CONTAINERS: 4soulsband_mysql_db 4soulsband_wordpress
-    networks:
-      4soulsband_net:
-
 networks:
   4soulsband_net:
     driver: bridge
@@ -101,8 +83,3 @@ networks:
 
   redis_net:
     external: true
-
-volumes: # Persistent data
-  db:
-  wp:
-  backup:
