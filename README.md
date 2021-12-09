@@ -120,3 +120,10 @@ If a wordpress site has the "gateway timeout" error, try add this to container l
 ```yaml
 - traefik.docker.network=traefik_proxy_net
 ```
+
+```bash
+docker exec -ti redis redis-cli -p 6380 monitor
+
+docker exec -ti redis redis-cli -p 6380
+127.0.0.1:6379> KEYS *
+```

@@ -27,7 +27,6 @@ services:
     networks:
       traefik_proxy_net:
       4soulsband_net:
-      redis_net:
 
   4soulsband_mysql_db:
     container_name: 4soulsband_mysql_db
@@ -46,7 +45,28 @@ services:
     networks:
       4soulsband_net:
       traefik_proxy_net:  # To get access to a db by domain name.
-      redis_net:
+
+  redis:
+    image: redis:6.0.15-alpine
+    container_name: redis
+
+    cpu_quota: 20000  # 1000 = 1%
+    mem_reservation: 512M
+    restart: always
+
+    command: --port 6380
+    entrypoint: redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      4soulsband_net:
 
 networks:
   4soulsband_net:
