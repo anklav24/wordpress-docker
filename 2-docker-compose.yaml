@@ -16,7 +16,7 @@ services:
     volumes:
       - ./4soulsband_wordpress:/var/www/html
     labels:
-      - traefik.http.routers.4soulsband_wordpress.rule=Host(`4soulsband.duckdns.org`)
+      - traefik.http.routers.4soulsband_wordpress.rule=Host(`xn--4-htbm7bza.xn--p1ai`)
       - traefik.http.routers.4soulsband_wordpress.tls.certresolver=${CASERVER}
       - traefik.http.services.4soulsband_wordpress.loadbalancer.server.port=80
       - traefik.docker.network=traefik_proxy_net
