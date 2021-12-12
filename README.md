@@ -154,3 +154,19 @@ sudo tree 4soulsband_wordpress/wp-content/ -pugL 4  # Show all files tree
 
 Cactus Companion
 Visual Composer Website Builder
+
+```bash
+sudo find ./4soulsband_wordpress/ -type d -exec chmod -v 744 {} +
+sudo find ./4soulsband_wordpress/ -type f -exec chmod -v 644 {} +
+sudo chown -Rv www-data:www-data 4soulsband_wordpress
+```
+
+```bash
+sudo cp -rv 4souls/wp-content/uploads 4soulsband_wordpress/wp-content
+sudo find ./4soulsband_wordpress/wp-content -type d -exec chmod -v 744 {} +
+sudo find ./4soulsband_wordpress/wp-content -type f -exec chmod -v 644 {} +
+sudo chown -Rv www-data:www-data 4soulsband_wordpress/wp-content/*
+
+sudo tree 4soulsband_wordpress/wp-content/ -dpugL 3  # Show directories tree
+sudo tree 4soulsband_wordpress/wp-content/ -pugL 4  # Show all files tree
+```

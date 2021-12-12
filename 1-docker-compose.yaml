@@ -103,6 +103,7 @@ services:
     restart: always
 
     environment:
+      UPLOAD_LIMIT: 128M
       PMA_ARBITRARY: 1
     labels:
       - traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.oracle24.duckdns.org`)
