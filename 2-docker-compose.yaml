@@ -15,6 +15,7 @@ services:
     env_file: deploy_configs/env_vars/4soulsband_wordpress.env
     volumes:
       - ./4soulsband_wordpress:/var/www/html
+      - ./deploy_configs/env_vars/4soulsband_wordpress.ini:/var/www/html/php.ini
     labels:
       - traefik.http.routers.4soulsband_wordpress.rule=Host(`xn--4-htbm7bza.xn--p1ai`)
       - traefik.http.routers.4soulsband_wordpress.tls.certresolver=${CASERVER}

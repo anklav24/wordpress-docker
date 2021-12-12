@@ -127,3 +127,30 @@ docker exec -ti redis redis-cli -p 6380 monitor
 docker exec -ti redis redis-cli -p 6380
 127.0.0.1:6379> KEYS *
 ```
+
+# Restore from wordpress backup
+```bash
+docker exec -ti 4soulsband_mysql_db mysql -u exampleuser --password=examplepass 4soulsband
+```
+```sql
+DROP TABLE `wp_commentmeta`, `wp_comments`, `wp_links`, `wp_options`, `wp_postmeta`, `wp_posts`,`wp_termmeta`, `wp_terms`, `wp_term_relationships`, `wp_term_taxonomy`, `wp_usermeta`, `wp_users`;
+exit
+```
+
+```bash
+sudo rm -rfv 4soulsband_wordpress/
+./down_up.sh  # Return docker containers
+cat dump-ck03767_4souls-full-26.12.2020-10.sql | docker exec -i 4soulsband_mysql_db mysql -u exampleuser --password=examplepass 4soulsband
+# Run site /wp-admin
+
+sudo cp -rv 4souls/wp-content 4soulsband_wordpress/
+sudo find ./4soulsband_wordpress/wp-content -type d -exec chmod -v 744 {} +
+sudo find ./4soulsband_wordpress/wp-content -type f -exec chmod -v 644 {} +
+sudo chown -Rv www-data:www-data 4soulsband_wordpress/wp-content/*
+
+sudo tree 4soulsband_wordpress/wp-content/ -dpugL 3  # Show directories tree
+sudo tree 4soulsband_wordpress/wp-content/ -pugL 4  # Show all files tree
+```
+
+Cactus Companion
+Visual Composer Website Builder
