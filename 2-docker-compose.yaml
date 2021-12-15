@@ -47,6 +47,51 @@ services:
       4soulsband_net:
       traefik_proxy_net:  # To get access to a db by domain name.
 
+  4soulsband_wordpress1:
+    container_name: 4soulsband_wordpress1
+    image: wordpress:php8.0
+
+    cpu_quota: 10000  # 1000 = 1%
+    mem_reservation: 256M
+    restart: always
+
+    depends_on:
+      - 4soulsband_mysql_db1
+    env_file: deploy_configs/env_vars/4soulsband_wordpress1.env
+    volumes:
+      - ./4soulsband_wordpress1:/var/www/html
+      - ./deploy_configs/env_vars/4soulsband_wordpress.ini:/var/www/html/php.ini
+    labels:
+      - traefik.http.routers.4soulsband_wordpress1.rule=Host(`4soulsband.duckdns.org`)
+      - traefik.http.routers.4soulsband_wordpress1.tls.certresolver=${CASERVER}
+      - traefik.http.services.4soulsband_wordpress1.loadbalancer.server.port=80
+      - traefik.docker.network=traefik_proxy_net
+
+      - traefik.enable=true
+      - traefik.http.routers.4soulsband_wordpress1.entrypoints=http,https
+      - traefik.http.routers.4soulsband_wordpress1.tls=true
+    networks:
+      traefik_proxy_net:
+      4soulsband_net:
+
+  4soulsband_mysql_db1:
+    container_name: 4soulsband_mysql_db1
+    image: mysql/mysql-server:8.0
+
+    cpu_quota: 10000  # 1000 = 1%
+    mem_reservation: 512M
+    restart: always
+
+    ports:
+      - "3317:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    env_file: ./deploy_configs/env_vars/4soulsband_wordpress.env
+    volumes:
+      - ./4soulsband_mysql_db1:/var/lib/mysql
+    networks:
+      4soulsband_net:
+      traefik_proxy_net:  # To get access to a db by domain name.
+
   redis:
     image: redis:6.0.15-alpine
     container_name: redis
@@ -64,6 +109,7 @@ services:
         max-size: "10m"
         max-file: "3"
     volumes:
+      - redis_data:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
@@ -84,3 +130,6 @@ networks:
 
   redis_net:
     external: true
+
+volumes:
+  redis_data:
