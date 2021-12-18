@@ -76,7 +76,10 @@ echo "Delete files older than $days_to_keep (Day/Days)" |& tee -a $logfile_path
 find $backup_task_path/* ! -path $logfile_path -mtime +$days_to_keep |& tee -a $logfile_path
 find $backup_task_path/* ! -path $logfile_path -mtime +$days_to_keep -delete |& tee -a $logfile_path
 echo "Deletion completed" |& tee -a $logfile_path
-echo |& tee -a $logfile_path
+
+timestamp=`date +%Y-%m-%d"T"%H%M%S`
+echo "Backup was ended at: "$timestamp |& tee -a $logfile_path
+echo |& tee -a $logfile_path  # A newline at the end of the file.
 
 if [[ -n $debug ]]; then
 
@@ -86,7 +89,7 @@ cat $logfile_path
 echo
 
 echo "===TREE==="
-tree ./4soulsband_backup
+tree ./4soulsband_backup -pugsh
 echo "===DEBUG==="
 echo
 fi

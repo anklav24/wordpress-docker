@@ -1,5 +1,17 @@
 # Wordpress, MySQL, phpMyAdmin, Traefik (TLS, HTTPS), Docker
 
+```bash
+sudo systemctl daemon-reload  # Reload systemd after service changing.
+clear; sudo systemctl status *4sou*timer  # Check backup timers
+
+sudo systemctl start 4soulsband_wordpress_daily_backup.service  # Start the backup manually.
+
+journalctl -u 4soulsband_wordpress_daily_backup.timer
+journalctl -u 4soulsband_wordpress_daily_backup.service
+
+
+```
+
 ## Tested
 - 2021-12-01
 
@@ -57,11 +69,12 @@ docker-compose up -d
 - Check .env, deploy_configs/traefik
 
 ### UI Links
-Traefik
-- https://traefik.zabbix-web24.duckdns.org
+- https://xn--4-htbm7bza.xn--p1ai/
+- https://traefik.oracle24.duckdns.org
+- https://portainer.oracle24.duckdns.org
+- https://pgadmin.oracle24.duckdns.org
+- https://phpmyadmin.oracle24.duckdns.org
 - https://zabbix.zabbix-web24.duckdns.org
-- https://grafana.zabbix-web24.duckdns.org
-- https://mikrotik.zabbix-web24.duckdns.org
 
 ### References
 - https://www.duckdns.org/
@@ -90,8 +103,8 @@ docker exec -ti redis redis-cli -p 6380
 
 ```bash
 # Create a backup of wordpress
-tar -czvf 4soulsband_wordpress1_backup_`date +%Y-%m-%d"T"%H%M`.tar.gz 4soulsband_wordpress1  # Wordpress files backup
-docker exec 4soulsband_mysql_db1 mysqldump --no-tablespaces -u exampleuser --password=examplepass 4soulsband | gzip -9 > 4soulsband_mysql_backup1_`date +%Y-%m-%d"T"%H%M`.sql.gz  # Wordpress DB backup
+tar -czvf 4soulsband_wordpress1_backup_`date +%Y-%m-%d"T"%H%M`00.tar.gz 4soulsband_wordpress1  # Wordpress files backup
+docker exec 4soulsband_mysql_db1 mysqldump --no-tablespaces -u exampleuser --password=examplepass 4soulsband | gzip -9 > 4soulsband_mysql_backup1_`date +%Y-%m-%d"T"%H%M`00.sql.gz  # Wordpress DB backup
 ```
 
 ## Backup and restore
@@ -114,13 +127,13 @@ exit
 ### Restore DB
 ```bash
 # Example
-gunzip < mysql_backup_13-12-2021T115554.sql.gz | docker exec -i 4soulsband_mysql_db mysql -u exampleuser --password=examplepass 4soulsband
+gunzip < mysql_backup_13-12-2021T115500.sql.gz | docker exec -i 4soulsband_mysql_db mysql -u exampleuser --password=examplepass 4soulsband
 ```
 
 ### Restore files
 ```bash
 sudo rm -rfv 4soulsband_wordpress/
-sudo tar -xzvf 4soulsband_wordpress_backup_2021-12-13T123434.tar.gz
+sudo tar -xzvf 4soulsband_wordpress_backup_2021-12-13T123400.tar.gz
 ./down_up.sh  # Restart docker containers
 
 # If the above does not work. Try this.
@@ -131,5 +144,5 @@ sudo chown -Rv www-data:www-data 4soulsband_wordpress
 ./down_up.sh  # Restart docker containers
 
 sudo tree 4soulsband_wordpress/wp-content/ -dpugL 3  # Show directories tree
-sudo tree 4soulsband_wordpress1/wp-content/ -pugL 4  # Show all files tree
+sudo tree 4soulsband_wordpress/wp-content/ -pugL 4  # Show all files tree
 ```

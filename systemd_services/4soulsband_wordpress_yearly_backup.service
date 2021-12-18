@@ -1,0 +1,12 @@
+[Unit]
+Description=4soulsband_wordpress_yearly_backup
+After=network.target
+
+[Service]
+Type=oneshot
+
+WorkingDirectory=/home/ubuntu/wordpress-docker
+ExecStart=/home/ubuntu/wordpress-docker/4soulsband_wordpress_backup.sh yearly 1825 mysql_db_name mysql_user mysql_password debug
+
+[Install]
+WantedBy=multi-user.target

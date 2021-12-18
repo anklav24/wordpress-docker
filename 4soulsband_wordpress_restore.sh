@@ -11,7 +11,7 @@ if [[ -z $task_name || -z $mysql_db_name || -z $mysql_user || -z $mysql_password
     exit 1
 fi
 
-timestamp=2021-12-18T010208
+timestamp=2021-12-18T044715
 backup_dir_name=4soulsband_backup
 logfile_name="$task_name"_restore.log
 logfile_path=/tmp/$backup_dir_name/$task_name/$logfile_name
@@ -70,6 +70,8 @@ echo "Restarting docker container..." |& tee -a $logfile_path
 docker-compose -f 2-docker-compose.yaml down
 docker-compose -f 2-docker-compose.yaml up -d
 
+timestamp=`date +%Y-%m-%d"T"%H%M%S`
+echo "Restoring was ended at: "$timestamp |& tee -a $logfile_path
 echo |& tee -a $logfile_path  # A newline at the end of the file.
 
 # Log rotate
