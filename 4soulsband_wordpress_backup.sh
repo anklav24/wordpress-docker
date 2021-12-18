@@ -56,7 +56,7 @@ tar -czf "$backup_path_timestamp/wordpress_$timestamp.tar.gz" $wp_source_dir \
 
 # Env and settings files backup
 echo "Settings..." |& tee -a $logfile_path
-tar -czf "$backup_path_timestamp/config_$timestamp.tar.gz" $config_source_dir .env \
+tar -czf "$backup_path_timestamp/config_$timestamp.tar.gz" $config_source_dir .env README_secret.md\
 |& tee -a "$logfile_path"
 
 # Combine files
