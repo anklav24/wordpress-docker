@@ -12,6 +12,7 @@ wp_source_dir=4soulsband_wordpress
 config_source_dir=deploy_configs
 backup_dir_name=./4soulsband_backup
 combine_file_name=4soulsband
+gdrive_folder_id=1Y8rzSMGR7c_nw95Wgu50z_9dL7btYvRj
 
 keep_log_lines=300
 
@@ -66,6 +67,13 @@ tar -cf "$backup_task_path"/"$combine_file_name"_"$timestamp.tar" \
 "$backup_path_timestamp/wordpress_$timestamp.tar.gz" \
 "$backup_path_timestamp/config_$timestamp.tar.gz"
 rm -rf $backup_path_timestamp
+
+# Backup to Google Drive
+if [[ "$task_name" =~ ^(yearly)$ ]]; then
+echo "Uploading to google drive..." |& tee -a $logfile_path
+echo gdrive_folder_id: $gdrive_folder_id "$backup_task_path"/"$combine_file_name"_"$timestamp.tar" |& tee -a $logfile_path
+gdrive upload --parent $gdrive_folder_id "$backup_task_path"/"$combine_file_name"_"$timestamp.tar"
+fi
 
 # Log rotate
 tail -n $keep_log_lines $logfile_path > /tmp/"$logfile_name".tmp
