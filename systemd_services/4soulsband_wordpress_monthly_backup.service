@@ -5,6 +5,9 @@ After=network.target
 [Service]
 Type=oneshot
 
+User=root
+Group=root
+
 WorkingDirectory=/home/ubuntu/wordpress-docker
 ExecStart=/home/ubuntu/wordpress-docker/4soulsband_wordpress_backup.sh monthly 186 mysql_db_name mysql_user mysql_password debug
 
