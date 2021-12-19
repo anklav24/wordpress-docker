@@ -1,10 +1,12 @@
-# Wordpress, MySQL, phpMyAdmin, Traefik (TLS, HTTPS), Docker
+# Wordpress, MySQL, phpMyAdmin, Traefik (TLS, HTTPS), Docker, Uploading to Google Drive
 
 ```bash
 sudo systemctl daemon-reload  # Reload systemd after service changing.
 clear; sudo systemctl status *4sou*timer  # Check backup timers
 
 sudo systemctl start 4soulsband_wordpress_daily_backup.service  # Start the backup manually.
+sudo systemctl start 4soulsband_wordpress_weekly_backup.service  # Start the backup manually.
+sudo systemctl start 4soulsband_wordpress_yearly_backup.service  # Start the backup manually. With Google Drive Sync
 
 journalctl -u 4soulsband_wordpress_daily_backup.timer
 journalctl -u 4soulsband_wordpress_daily_backup.service
@@ -71,10 +73,10 @@ docker-compose up -d
 ### UI Links
 - https://xn--4-htbm7bza.xn--p1ai/
 - https://traefik.oracle24.duckdns.org
-- https://portainer.oracle24.duckdns.org
-- https://pgadmin.oracle24.duckdns.org
-- https://phpmyadmin.oracle24.duckdns.org
-- https://zabbix.zabbix-web24.duckdns.org
+- https://portainer.oracle24.duckdns.org (Restricted by IP with Traefik)
+- https://pgadmin.oracle24.duckdns.org (Restricted by IP with Traefik)
+- https://phpmyadmin.oracle24.duckdns.org (Restricted by IP with Traefik)
+- https://zabbix.zabbix-web24.duckdns.org (Restricted by IP with Traefik)
 
 ### References
 - https://www.duckdns.org/
