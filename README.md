@@ -1,7 +1,7 @@
-# Wordpress, MySQL, Redis phpMyAdmin, Traefik (TLS, HTTPS), Docker, Uploading to Google Drive
+# Wordpress, MySQL, Redis, phpMyAdmin, Traefik (TLS, HTTPS), Docker, Uploading to Google Drive
 
 ## Overview
-If you need your own Wordpress server with SSL and Backups.
+If you need your own Wordpress server with HTTPS and Backups.
 
 ### Requirements
 - Oracle VPS Free Tier ARM (VM.Standard.A1.Flex)
