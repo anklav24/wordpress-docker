@@ -4,7 +4,7 @@
 If you need your own WordPress server with HTTPS and Backups.
 
 ### Requirements
-- Oracle VPS Free Tier ARM (VM.Standard.A1.Flex)
+- Oracle VPS Free Tier ARM (VM.Standard.A1.Flex) I did on 4 CPU Ampere 24 RAM.
 - Ubuntu 20.04 ARM
 
 ### Version
