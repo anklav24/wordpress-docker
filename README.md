@@ -1,7 +1,7 @@
-# Wordpress, MySQL, Redis, phpMyAdmin, Traefik (TLS, HTTPS), Docker, Uploading to Google Drive
+# WordPress, MySQL, Redis, phpMyAdmin, Traefik (TLS, HTTPS), Docker, Uploading to Google Drive
 
 ## Overview
-If you need your own Wordpress server with HTTPS and Backups.
+If you need your own WordPress server with HTTPS and Backups.
 
 ### Requirements
 - Oracle VPS Free Tier ARM (VM.Standard.A1.Flex)
@@ -84,7 +84,7 @@ docker-compose -f 2-docker-compose.yaml up -d
 - https://docs.docker.com/compose/compose-file/compose-file-v2/
 
 ## Troubleshooting:
-If a wordpress site has the "gateway timeout" error, you need to set default network for traefik:
+If a WordPress site has the "gateway timeout" error, you need to set default network for traefik:
 ```yaml
 - traefik.docker.network=traefik_proxy_net
 ```
