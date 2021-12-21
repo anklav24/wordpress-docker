@@ -49,6 +49,12 @@ chmod +x install.sh && ./install.sh
 ```
 ### Install gdrive as root user
 - https://github.com/prasmussen/gdrive
+- Find folder_id
+```bash
+# Example
+gdrive list --absolute --query "mimeType = 'application/vnd.google-apps.folder' and name contains 'backup'" --max 1000
+```
+- Change in `4soulsband_wordpress_backup.sh` `gdrive_folder_id` variable to your `Id`
 
 ### After install go to check your wordpress domain
 - [https://YOUR-WORDPRESS-DOMAIN.com]()
