@@ -1,5 +1,104 @@
-# Wordpress, MySQL, phpMyAdmin, Traefik (TLS, HTTPS), Docker, Uploading to Google Drive
+# Wordpress, MySQL, Redis phpMyAdmin, Traefik (TLS, HTTPS), Docker, Uploading to Google Drive
 
+## Overview
+If your need your own Wordpress server with SSL and Backups.
+
+### Requirements
+- Oracle VPS Free Tier ARM (VM.Standard.A1.Flex)
+- Ubuntu 20.04 ARM
+
+### Version
+- docker-compose version 2.4
+- wordpress:php8.0
+- redis 6.0.15-alpine
+- Zabbix agent 5.0.16
+- Postgres 12
+- Traefik 2.5.3
+- Portainer 2.9.3-alpine
+- phpmyadmin 5.1.1
+- pgadmin 4.6.2
+- mysql-server:8.0 (Oracle)
+
+### Tested
+- 2021-12-21
+
+# Installation
+### Clone the repository
+```bash
+cd ~ &&
+git clone https://github.com/anklav24/wordpress-docker &&
+cd wordpress-docker
+```
+
+### Select a develop branch (Optional)
+```bash
+git checkout develop
+```
+
+### Rename ```deploy_configs_example```, ```.env.example```
+- ```deploy_configs_example``` -> ```deploy_configs```
+- ```.env.example``` -> ```.env```
+
+### Check ```deploy_configs```, ```*-docker-compose.yaml```, ```.env```
+Replace domains, envs, emails, logins, passwords and tls.certresolver on yours!
+Don't use examples in production!
+
+### Install Docker, Docker-compose and other stuff.
+```bash
+chmod +x install.sh && ./install.sh
+```
+### Install gdrive as root user
+- https://github.com/prasmussen/gdrive
+
+### After install go to check your wordpress domain
+- [https://YOUR-WORDPRESS-DOMAIN.com]()
+- Setup wordpress and install ```redis-object-cache``` plugin
+
+### Run compose files
+```bash
+cd ~/wordpress-docker
+docker-compose -f 1-docker-compose.yaml up -d; 
+docker-compose -f 2-docker-compose.yaml up -d
+```
+
+## UI Links
+- https://xn--4-htbm7bza.xn--p1ai/
+- https://traefik.oracle24.duckdns.org
+- https://portainer.oracle24.duckdns.org (Restricted by IP with Traefik)
+- https://pgadmin.oracle24.duckdns.org (Restricted by IP with Traefik)
+- https://phpmyadmin.oracle24.duckdns.org (Restricted by IP with Traefik)
+- https://zabbix.zabbix-web24.duckdns.org (Restricted by IP with Traefik)
+
+## References
+- https://www.duckdns.org/
+- https://ssllabs.com/ssltest
+- https://hstspreload.org/
+- https://doc.traefik.io/traefik/
+- https://github.com/prasmussen/gdrive
+- https://docs.docker.com/compose/compose-file/compose-file-v2/
+
+## Troubleshooting:
+If a wordpress site has the "gateway timeout" error, you need to set default network for traefik:
+```yaml
+- traefik.docker.network=traefik_proxy_net
+```
+
+## Useful commands
+### Redis
+```bash
+docker exec -ti redis redis-cli -p 6380 monitor
+
+docker exec -ti redis redis-cli -p 6380
+127.0.0.1:6379> KEYS *
+```
+
+### Systemd service
+Set up backup automation:
+```
+sudo cp systemd_services/* /etc/systemd/system/  # Copy services and timers files.
+sudo systemctl start 4soulsband_wordpress_montly_backup.service  # Check the service works properly (Example)
+sudo systemctl enable 4soulsband_wordpress_montly_backup.timer  # Enable a timer (Example)
+```
 ```bash
 sudo systemctl daemon-reload  # Reload systemd after service changing.
 clear; sudo systemctl status *4sou*timer  # Check backup timers
@@ -9,143 +108,20 @@ sudo systemctl start 4soulsband_wordpress_daily_backup.service  # Start the back
 sudo systemctl start 4soulsband_wordpress_weekly_backup.service  # Start the backup manually.
 sudo systemctl start 4soulsband_wordpress_yearly_backup.service  # Start the backup manually. With Google Drive Sync
 
-journalctl -u 4soulsband_wordpress_daily_backup.timer
-journalctl -u 4soulsband_wordpress_daily_backup.service
-
-
-```
-
-## Tested
-- 2021-12-21
-
-## Requirements
-- Oracle VPS Free Tier ARM (VM.Standard.A1.Flex)
-- Ubuntu 20.04 ARM
-
-## Version
-- Zabbix 5.0.16
-- Postgres 12
-- Grafana 8.2.0
-- Traefik 2.5.3
-
-## Clone the repository
-```bash
-cd ~ &&
-git clone https://github.com/anklav24/zabbix-docker &&
-cd zabbix-docker
-```
-
-## Select a develop branch (Optional)
-```bash
-git checkout develop
-```
-
-## Check ```deploy_configs``` and ```*-docker-compose.yaml```
-Replace domains, envs, emails, logins, passwords and tls.certresolver on yours!
-
-## Install
-Docker, Docker-compose and other stuff.
-```bash
-chmod +x install.sh && ./install.sh
-```
-
-## Run compose files
-For a split config, use one of these two commands on the two servers:
-```bash
-cd ~/zabbix-docker
-```
-```bash
-docker-compose -f zabbix-server-docker-compose.yaml up -d
-
-docker-compose -f zabbix-web-docker-compose.yaml up -d
-```
-If you have one powerfull VPS use:
-```bash
-docker-compose up -d
-```
-
-
-## Zabbix
-- Check deploy_configs/env_vars/zabbix_agent.env
-
-##Traefik
-- Check .env, deploy_configs/traefik
-
-### UI Links
-- https://xn--4-htbm7bza.xn--p1ai/
-- https://traefik.oracle24.duckdns.org
-- https://portainer.oracle24.duckdns.org (Restricted by IP with Traefik)
-- https://pgadmin.oracle24.duckdns.org (Restricted by IP with Traefik)
-- https://phpmyadmin.oracle24.duckdns.org (Restricted by IP with Traefik)
-- https://zabbix.zabbix-web24.duckdns.org (Restricted by IP with Traefik)
-
-### References
-- https://www.duckdns.org/
-- https://ssllabs.com/ssltest
-- https://hstspreload.org/
-- https://doc.traefik.io/traefik/
-- https://grafana.com/tutorials/run-grafana-behind-a-proxy/
-- https://github.com/muutech/zabbix-templates/tree/master/ANDROID
-- https://play.google.com/store/apps/details?id=fr.damongeot.zabbixagent&hl=ru&gl=US
-- https://www.zabbix.com/documentation/5.0/ru/manual/encryption/using_pre_shared_keys
-- https://www.zabbix.com/documentation/5.0/manual/config/items/itemtypes/zabbix_agent/win_keys
-
-## Troubleshooting:
-If a wordpress site has the "gateway timeout" error, try add this to container labels:
-```yaml
-- traefik.docker.network=traefik_proxy_net
-```
-
-## Redis
-```bash
-docker exec -ti redis redis-cli -p 6380 monitor
-
-docker exec -ti redis redis-cli -p 6380
-127.0.0.1:6379> KEYS *
-```
-
-```bash
-# Create a backup of wordpress
-tar -czvf 4soulsband_wordpress1_backup_`date +%Y-%m-%d"T"%H%M`00.tar.gz 4soulsband_wordpress1  # Wordpress files backup
-docker exec 4soulsband_mysql_db1 mysqldump --no-tablespaces -u exampleuser --password=examplepass 4soulsband | gzip -9 > 4soulsband_mysql_backup1_`date +%Y-%m-%d"T"%H%M`00.sql.gz  # Wordpress DB backup
+journalctl -u 4soulsband_wordpress_daily_backup.timer  # Check logs
+journalctl -u 4soulsband_wordpress_daily_backup.service  # Check logs
 ```
 
 ## Backup and restore
-### Create a backup of wordpress
-```bash
-# Create a backup of wordpress
-tar -czvf 4soulsband_wordpress_backup_`date +%Y-%m-%d"T"%H%M`.tar.gz 4soulsband_wordpress  # Wordpress files backup
-docker exec 4soulsband_mysql_db mysqldump --no-tablespaces -u exampleuser --password=examplepass 4soulsband | gzip -9 > 4soulsband_mysql_backup_`date +%Y-%m-%d"T"%H%M`.sql.gz  # Wordpress DB backup
-```
-
-## Restore from copy backup
-### Drop DB
-```bash
-docker exec -ti 4soulsband_mysql_db mysql -u exampleuser --password=examplepass 4soulsband
-```
-```sql
-DROP TABLE `wp_commentmeta`, `wp_comments`, `wp_links`, `wp_options`, `wp_postmeta`, `wp_posts`,`wp_termmeta`, `wp_terms`, `wp_term_relationships`, `wp_term_taxonomy`, `wp_usermeta`, `wp_users`;
-exit
-```
-### Restore DB
+### Backup
 ```bash
 # Example
-gunzip < mysql_backup_13-12-2021T115500.sql.gz | docker exec -i 4soulsband_mysql_db mysql -u exampleuser --password=examplepass 4soulsband
+./4soulsband_wordpress_backup.sh daily 7 YOUR_DATABASE_NAME YOUR_DATABASE_USER YOUR_DATABASE_PASSWORD true
+# Need args: task_name (daily, monthly, yearly), days_to_keep (7, 186, 1825), mysql_db_name, mysql_user, mysql_password, [debug (true)]
 ```
-
-### Restore files
+### Restore
 ```bash
-sudo rm -rfv 4soulsband_wordpress/
-sudo tar -xzvf 4soulsband_wordpress_backup_2021-12-13T123400.tar.gz
-./down_up.sh  # Restart docker containers
-
-# If the above does not work. Try this.
-sudo chmod 755 4soulsband_wordpress
-sudo find ./4soulsband_wordpress/ -type d -exec chmod -v 755 {} +
-sudo find ./4soulsband_wordpress/ -type f -exec chmod -v 644 {} +
-sudo chown -Rv www-data:www-data 4soulsband_wordpress
-./down_up.sh  # Restart docker containers
-
-sudo tree 4soulsband_wordpress/wp-content/ -dpugL 3  # Show directories tree
-sudo tree 4soulsband_wordpress/wp-content/ -pugL 4  # Show all files tree
+# Before you need change timestamp and backup_dir_name variables in the file 
+./4soulsband_wordpress_restore.sh daily YOUR_DATABASE_NAME YOUR_DATABASE_USER YOUR_DATABASE_PASSWORD true
+# Need args: task_name (daily, monthly, yearly), mysql_db_name, mysql_user, mysql_password, [debug (true)]
 ```
