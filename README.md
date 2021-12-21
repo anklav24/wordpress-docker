@@ -3,6 +3,7 @@
 ```bash
 sudo systemctl daemon-reload  # Reload systemd after service changing.
 clear; sudo systemctl status *4sou*timer  # Check backup timers
+sudo systemctl list-timers  # Check all timers
 
 sudo systemctl start 4soulsband_wordpress_daily_backup.service  # Start the backup manually.
 sudo systemctl start 4soulsband_wordpress_weekly_backup.service  # Start the backup manually.
@@ -15,7 +16,7 @@ journalctl -u 4soulsband_wordpress_daily_backup.service
 ```
 
 ## Tested
-- 2021-12-01
+- 2021-12-21
 
 ## Requirements
 - Oracle VPS Free Tier ARM (VM.Standard.A1.Flex)
