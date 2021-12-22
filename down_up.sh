@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-#docker-compose -f 1-docker-compose.yaml down
+docker-compose -f 1-docker-compose.yaml down
 docker-compose -f 2-docker-compose.yaml down
 echo
 
-#docker-compose -f 1-docker-compose.yaml up -d
+docker-compose -f 1-docker-compose.yaml up -d
 docker-compose -f 2-docker-compose.yaml up -d
 echo
 
