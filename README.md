@@ -56,6 +56,10 @@ gdrive list --absolute --query "mimeType = 'application/vnd.google-apps.folder' 
 ```
 - Change in `4soulsband_wordpress_backup.sh` `gdrive_folder_id` variable to your `Id`
 
+### Setup logrotate for traefik
+- Setup `logrotate` check config in `deploy_configs/logrotate.d/traefik`
+- Or turn off logs
+
 ### After install go to check your wordpress domain
 - [https://YOUR-WORDPRESS-DOMAIN.com]()
 - Setup wordpress and install ```redis-object-cache``` plugin
