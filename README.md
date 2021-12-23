@@ -77,7 +77,6 @@ docker-compose -f 2-docker-compose.yaml up -d
 - https://portainer.oracle24.duckdns.org (Restricted by IP with Traefik)
 - https://pgadmin.oracle24.duckdns.org (Restricted by IP with Traefik)
 - https://phpmyadmin.oracle24.duckdns.org (Restricted by IP with Traefik)
-- https://zabbix.zabbix-web24.duckdns.org (Restricted by IP with Traefik)
 
 ## References
 - https://www.duckdns.org/
