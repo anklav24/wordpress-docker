@@ -7,3 +7,6 @@ zbx_env*/
 .env
 deploy_configs/
 README_secret.md
+4soulsband_backup/
+4soulsband_mysql_db/
+4soulsband_wordpress/
