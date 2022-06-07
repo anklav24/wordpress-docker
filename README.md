@@ -56,6 +56,11 @@ gdrive list --absolute --query "mimeType = 'application/vnd.google-apps.folder' 
 ```
 - Change in `4soulsband_wordpress_backup.sh` `gdrive_folder_id` variable to your `Id`
 
+### Setup Yandex Drive Aouth token
+
+- In `.env` add your `YANDEX_TOKEN`
+- Go to web yandex disk and create folder /backups/sites_backup/ or change the path in the backup scripts
+
 ### Setup logrotate for traefik
 - Setup `logrotate` check config in `deploy_configs/logrotate.d/traefik`
 - Or turn off logs
