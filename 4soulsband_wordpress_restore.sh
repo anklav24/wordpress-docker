@@ -11,7 +11,7 @@ if [[ -z $task_name || -z $mysql_db_name || -z $mysql_user || -z $mysql_password
     exit 1
 fi
 
-timestamp=2021-12-18T044715
+timestamp=2023-01-01T000007
 backup_dir_name=4soulsband_backup
 logfile_name="$task_name"_restore.log
 logfile_path=/tmp/$backup_dir_name/$task_name/$logfile_name
