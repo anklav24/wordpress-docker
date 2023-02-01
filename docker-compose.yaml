@@ -30,7 +30,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.4soulsband_wordpress.entrypoints=https
       - traefik.http.routers.4soulsband_wordpress.tls=true
-      - traefik.http.routers.4soulsband_wordpress.middlewares=redirect-www@file,secheaders@file
+      - traefik.http.routers.4soulsband_wordpress.middlewares=redirect-www@file
     networks:
       traefik-reverse-proxy-net:
       4soulsband_net:
